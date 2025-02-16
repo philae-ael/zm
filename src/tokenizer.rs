@@ -185,10 +185,13 @@ impl<'a> Tokenizer<'a> {
 
         while self.whitespace(true).is_some() {}
 
+        let in_quote = matches!(self.next_char(false), Some(('"', _)));
+        if in_quote {
+            self.next_char(true);
+        }
+
         let start = self.loc;
         let mut end = start;
-
-        let in_quote = matches!(self.next_char(false), Some(('"', _)));
         while let Some((c, loc)) = if in_quote {
             self.next_char(true)
         } else {
