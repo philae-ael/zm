@@ -8,6 +8,14 @@ const ADD_UCODE: [UOps; 6] = [
     UOps::JmpRel(-4),
     UOps::Print,
 ];
+const MULL_UCODE: [UOps; 6] = [
+    UOps::Push(Value::Num(1)),
+    UOps::ReadNum,
+    UOps::JmpRelZ(2),
+    UOps::Mul,
+    UOps::JmpRel(-4),
+    UOps::Print,
+];
 
 const JOIN_UCODE: [UOps; 20] = [
     UOps::ReadString,
@@ -39,7 +47,7 @@ const JOIN_UCODE: [UOps; 20] = [
     UOps::Print,
 ];
 
-const KNOWN_OPS: [&str; 2] = ["+", "add"];
+const KNOWN_OPS: [&str; 4] = ["+", "add", "*", "mul"];
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
@@ -74,6 +82,7 @@ impl<'a> Parser<'a> {
         let uops: &[UOps] = match self.tokenizer.next_token()? {
             (Token::Ident(op), range) => match op {
                 "+" | "add" => &ADD_UCODE,
+                "*" | "mul" => &MULL_UCODE,
                 "join" => &JOIN_UCODE,
                 _ => {
                     return Err(Error::UnknownOperation {
@@ -122,6 +131,7 @@ pub enum UOps {
     Dup,
     Trim,
     Add,
+    Mul,
     Eq,
     Print,
 }

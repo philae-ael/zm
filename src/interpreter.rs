@@ -81,6 +81,16 @@ pub fn run(ucode: UCode) {
                     todo!()
                 }
             }
+            UOps::Mul => {
+                if let Some(s) = pop_2(&mut stack) {
+                    match s {
+                        [Value::Num(v2), Value::Num(v1)] => stack.push(Value::Num(v1 * v2)),
+                        _ => todo!(),
+                    }
+                } else {
+                    todo!()
+                }
+            }
             UOps::Eq => {
                 if let Some([v1, v2]) = pop_2(&mut stack) {
                     stack.push(Value::Num(if v1 == v2 { 1 } else { 0 }))
